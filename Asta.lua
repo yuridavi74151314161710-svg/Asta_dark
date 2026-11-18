@@ -21,9 +21,16 @@ local BLACK = Color3.fromRGB(0, 0, 0)
 local WHITE = Color3.fromRGB(255, 255, 255)
 local GRAY = Color3.fromRGB(160, 160, 160)
 local DARK = Color3.fromRGB(12, 12, 12)
+local DARK2 = Color3.fromRGB(25, 25, 25)
 
-local Cfg = { aim=false, autoShoot=false, esp=false, hit=false, spd=false, fly=false, dodge=false, antiAim=false }
+local Cfg = { 
+    aim=false, autoShoot=false, fov=150, hit=false, hitSize=25,
+    esp=false, chams=false, tracers=false, fullbright=false,
+    spd=false, fly=false, jmp=false, noclip=false, dodge=false, antiAim=false,
+    gravity=false, antiAfk=true, tp=false
+}
 
+-- BOTÃO FLUTUANTE
 local ToggleBtn = Instance.new("TextButton")
 ToggleBtn.Size = UDim2.new(0, 65, 0, 65)
 ToggleBtn.Position = UDim2.new(0.05, 0, 0.25, 0)
@@ -39,6 +46,7 @@ BtnStroke.Color = RED
 BtnStroke.Thickness = 2
 BtnStroke.Parent = ToggleBtn
 
+-- INTRO (Aumentada para 3 segundos)
 local IntroFrame = Instance.new("Frame")
 IntroFrame.Size = UDim2.new(0, 360, 0, 190)
 IntroFrame.Position = UDim2.new(0.5, -180, 0.5, -95)
@@ -83,7 +91,7 @@ local WelcomeLabel = Instance.new("TextLabel")
 WelcomeLabel.Size = UDim2.new(0, 245, 0, 25)
 WelcomeLabel.Position = UDim2.new(0, 95, 0, 57)
 WelcomeLabel.BackgroundTransparency = 1
-WelcomeLabel.Text = "BEM-VINDO AO ASTA HUB"
+WelcomeLabel.Text = "BEM-VINDO AO ASTA HUB V3"
 WelcomeLabel.TextColor3 = RED
 WelcomeLabel.Font = Enum.Font.GothamBold
 WelcomeLabel.TextSize = 12
@@ -95,7 +103,7 @@ local IntroTitle = Instance.new("TextLabel")
 IntroTitle.Size = UDim2.new(1, 0, 0, 35)
 IntroTitle.Position = UDim2.new(0, 0, 0, 100)
 IntroTitle.BackgroundTransparency = 1
-IntroTitle.Text = "ASTA HUB // GOD MODE"
+IntroTitle.Text = "ASTA HUB // PROFISSIONAL"
 IntroTitle.TextColor3 = RED
 IntroTitle.Font = Enum.Font.GothamBlack
 IntroTitle.TextSize = 21
@@ -106,7 +114,7 @@ local IntroQuote = Instance.new("TextLabel")
 IntroQuote.Size = UDim2.new(0.9, 0, 0, 30)
 IntroQuote.Position = UDim2.new(0.05, 0, 0, 145)
 IntroQuote.BackgroundTransparency = 1
-IntroQuote.Text = '"Invencível, intocável, imparável."'
+IntroQuote.Text = '"A supremacia começa agora."'
 IntroQuote.TextColor3 = WHITE
 IntroQuote.Font = Enum.Font.GothamBold
 IntroQuote.TextSize = 15
@@ -120,9 +128,10 @@ task.spawn(function()
     if success and image then ProfileImage.Image = image end
 end)
 
+-- MENU PRINCIPAL COM ABAS
 local MainMenu = Instance.new("Frame")
-MainMenu.Size = UDim2.new(0, 440, 0, 290)
-MainMenu.Position = UDim2.new(0.5, -220, 0.5, -145)
+MainMenu.Size = UDim2.new(0, 480, 0, 320)
+MainMenu.Position = UDim2.new(0.5, -240, 0.5, -160)
 MainMenu.BackgroundColor3 = BLACK
 MainMenu.Visible = false
 MainMenu.Active = true
@@ -143,7 +152,7 @@ local MenuTitle = Instance.new("TextLabel")
 MenuTitle.Size = UDim2.new(0.8, 0, 1, 0)
 MenuTitle.Position = UDim2.new(0.04, 0, 0, 0)
 MenuTitle.BackgroundTransparency = 1
-MenuTitle.Text = "ASTA HUB - GOD MODE"
+MenuTitle.Text = "ASTA HUB - V3 PRO"
 MenuTitle.TextColor3 = RED
 MenuTitle.Font = Enum.Font.GothamBlack
 MenuTitle.TextSize = 16
@@ -161,29 +170,109 @@ CloseBtn.TextSize = 18
 CloseBtn.Active = true
 CloseBtn.Parent = TopBar
 
-local Content = Instance.new("ScrollingFrame")
-Content.Size = UDim2.new(1, -20, 1, -60)
-Content.Position = UDim2.new(0, 10, 0, 48)
+-- BARRA DE ABAS
+local TabBar = Instance.new("ScrollingFrame")
+TabBar.Size = UDim2.new(1, 0, 0, 40)
+TabBar.Position = UDim2.new(0, 0, 0, 38)
+TabBar.BackgroundColor3 = DARK2
+TabBar.BorderSizePixel = 0
+TabBar.ScrollBarThickness = 0
+TabBar.ScrollingDirection = Enum.ScrollingDirection.X
+TabBar.CanvasSize = UDim2.new(0, 0, 0, 0)
+TabBar.AutomaticCanvasSize = Enum.AutomaticSize.X
+TabBar.Parent = MainMenu
+local TabLayout = Instance.new("UIListLayout")
+TabLayout.FillDirection = Enum.FillDirection.Horizontal
+TabLayout.Padding = UDim.new(0, 4)
+TabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+TabLayout.Parent = TabBar
+local TabPad = Instance.new("UIPadding")
+TabPad.PaddingLeft = UDim.new(0, 8)
+TabPad.Parent = TabBar
+
+-- ÁREA DE CONTEÚDO
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, 0, 1, -78)
+Content.Position = UDim2.new(0, 0, 0, 78)
 Content.BackgroundTransparency = 1
-Content.ScrollBarThickness = 2
-Content.ScrollBarImageColor3 = RED
-Content.CanvasSize = UDim2.new(0, 0, 0, 0)
-Content.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Content.ClipsDescendants = true
 Content.Parent = MainMenu
 
-local Layout = Instance.new("UIListLayout")
-Layout.Padding = UDim.new(0, 8)
-Layout.Parent = Contentlocal function MakeToggle(name, key)
+local Pages = {}
+local Tabs = {}
+
+local function MakeTab(name)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1, 0, 0, 40)
-    btn.BackgroundColor3 = DARK
+    btn.Size = UDim2.new(0, 90, 0, 28)
+    btn.BackgroundColor3 = DARK2
+    btn.Text = name
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 12
+    btn.TextColor3 = GRAY
+    btn.Active = true
+    btn.Parent = TabBar
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 6)
+    c.Parent = btn
+
+    local page = Instance.new("ScrollingFrame")
+    page.Size = UDim2.new(1, 0, 1, 0)
+    page.BackgroundTransparency = 1
+    page.ScrollBarThickness = 2
+    page.ScrollBarImageColor3 = RED
+    page.CanvasSize = UDim2.new(0, 0, 0, 0)
+    page.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    page.Visible = false
+    page.Parent = Content
+    
+    local pad = Instance.new("UIPadding")
+    pad.PaddingTop = UDim.new(0, 10)
+    pad.PaddingLeft = UDim.new(0, 10)
+    pad.PaddingRight = UDim.new(0, 10)
+    pad.Parent = page
+    
+    local list = Instance.new("UIListLayout")
+    list.Padding = UDim.new(0, 6)
+    list.Parent = page
+
+    local obj = { b = btn, p = page }
+    table.insert(Tabs, obj)
+
+    btn.MouseButton1Click:Connect(function()
+        for _, t in pairs(Tabs) do
+            if t == obj then
+                t.p.Visible = true
+                TweenService:Create(t.b, TweenInfo.new(0.15), { BackgroundColor3 = RED, TextColor3 = WHITE }):Play()
+            else
+                t.p.Visible = false
+                TweenService:Create(t.b, TweenInfo.new(0.15), { BackgroundColor3 = DARK2, TextColor3 = GRAY }):Play()
+            end
+        end
+    end)
+    return page
+endlocal pCombat = MakeTab("Combat")
+local pVisual = MakeTab("Visual")
+local pMove = MakeTab("Movement")
+local pMisc = MakeTab("Misc")
+
+Tabs[1].p.Visible = true
+Tabs[1].b.BackgroundColor3 = RED
+Tabs[1].b.TextColor3 = WHITE
+
+local function AddToggle(parent, name, key)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, 0, 0, 38)
+    btn.BackgroundColor3 = DARK2
     btn.Text = "  [OFF] " .. name
     btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 14
+    btn.TextSize = 13
     btn.TextColor3 = GRAY
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Active = true
-    btn.Parent = Content
+    btn.Parent = parent
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 6)
+    c.Parent = btn
 
     btn.MouseButton1Click:Connect(function()
         Cfg[key] = not Cfg[key]
@@ -194,20 +283,109 @@ Layout.Parent = Contentlocal function MakeToggle(name, key)
         else
             btn.Text = "  [OFF] " .. name
             btn.TextColor3 = GRAY
-            btn.BackgroundColor3 = DARK
+            btn.BackgroundColor3 = DARK2
         end
     end)
 end
 
-MakeToggle("Aimbot (Trava na Cabeça)", "aim")
-MakeToggle("Auto-Shoot (Atirar Sozinho)", "autoShoot")
-MakeToggle("Bullet Dodger (Desviar de Balas)", "dodge")
-MakeToggle("Anti-Aim (Girar o Corpo)", "antiAim")
-MakeToggle("ESP Box (Ver Inimigos)", "esp")
-MakeToggle("Hitbox Expander (Hitbox Gigante)", "hit")
-MakeToggle("Velocidade (Speed)", "spd")
-MakeToggle("Voar (Fly)", "fly")
+local function AddSlider(parent, name, key, min, max, default)
+    local f = Instance.new("Frame")
+    f.Size = UDim2.new(1, 0, 0, 55)
+    f.BackgroundColor3 = DARK2
+    f.Parent = parent
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 6)
+    c.Parent = f
 
+    local l = Instance.new("TextLabel")
+    l.Size = UDim2.new(1, -60, 0, 20)
+    l.Position = UDim2.new(0, 10, 0, 5)
+    l.BackgroundTransparency = 1
+    l.Text = name
+    l.Font = Enum.Font.GothamMedium
+    l.TextSize = 12
+    l.TextColor3 = WHITE
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.Parent = f
+
+    local v = Instance.new("TextLabel")
+    v.Size = UDim2.new(0, 50, 0, 20)
+    v.Position = UDim2.new(1, -60, 0, 5)
+    v.BackgroundTransparency = 1
+    v.Text = tostring(default)
+    v.Font = Enum.Font.GothamBold
+    v.TextSize = 12
+    v.TextColor3 = RED
+    v.TextXAlignment = Enum.TextXAlignment.Right
+    v.Parent = f
+    Cfg[key] = default
+
+    local b = Instance.new("Frame")
+    b.Size = UDim2.new(1, -20, 0, 8)
+    b.Position = UDim2.new(0, 10, 0, 35)
+    b.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    b.Parent = f
+    local bc = Instance.new("UICorner")
+    bc.CornerRadius = UDim.new(0, 4)
+    bc.Parent = b
+
+    local fi = Instance.new("Frame")
+    fi.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
+    fi.BackgroundColor3 = RED
+    fi.Parent = b
+    local fic = Instance.new("UICorner")
+    fic.CornerRadius = UDim.new(0, 4)
+    fic.Parent = fi
+
+    local bt = Instance.new("TextButton")
+    bt.Size = UDim2.new(1, 20, 1, 20)
+    bt.Position = UDim2.new(0, -10, 0, -10)
+    bt.BackgroundTransparency = 1
+    bt.Text = ""
+    bt.Active = true
+    bt.Parent = b
+
+    local drag = false
+    bt.MouseButton1Down:Connect(function() drag = true; end)
+    UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then drag = false end end)
+    UIS.InputChanged:Connect(function(i)
+        if drag and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
+            local pos = math.clamp((i.Position.X - b.AbsolutePosition.X) / b.AbsoluteSize.X, 0, 1)
+            local val = math.floor(min + (max - min) * pos + 0.5)
+            fi.Size = UDim2.new(pos, 0, 1, 0)
+            v.Text = tostring(val)
+            Cfg[key] = val
+        end
+    end)
+end
+
+-- COMBAT
+AddToggle(pCombat, "Aimbot (Trava Cabeça)", "aim")
+AddToggle(pCombat, "Auto-Shoot (Atirar Auto)", "autoShoot")
+AddToggle(pCombat, "Bullet Dodger (Desviar)", "dodge")
+AddToggle(pCombat, "Anti-Aim (Girar)", "antiAim")
+AddToggle(pCombat, "Hitbox Expander", "hit")
+AddSlider(pCombat, "Hitbox Tamanho", "hitSize", 5, 50, 25)
+AddSlider(pCombat, "Aimbot FOV", "fov", 50, 500, 150)
+
+-- VISUAL
+AddToggle(pVisual, "ESP Box (Ver Inimigos)", "esp")
+AddToggle(pVisual, "Chams (Brilho)", "chams")
+AddToggle(pVisual, "Tracers (Linha)", "tracers")
+AddToggle(pVisual, "Fullbright (Claridade)", "fullbright")
+
+-- MOVEMENT
+AddToggle(pMove, "Velocidade (Speed)", "spd")
+AddToggle(pMove, "Voar (Fly)", "fly")
+AddToggle(pMove, "Infinite Jump", "jmp")
+AddToggle(pMove, "Noclip", "nc")
+AddToggle(pMove, "Gravity Control", "gravity")
+
+-- MISC
+AddToggle(pMisc, "Anti-AFK", "antiAfk")
+AddToggle(pMisc, "Click TP", "tp")
+
+-- SISTEMA DE INTRO
 local introPlayed = false
 local isAnimating = false
 
@@ -250,13 +428,14 @@ end
 ToggleBtn.MouseButton1Click:Connect(playIntroAndOpen)
 CloseBtn.MouseButton1Click:Connect(function() MainMenu.Visible = false end)
 
+-- LÓGICA DE FUNÇÕES
 local Cam = WS.CurrentCamera
 WS:GetPropertyChangedSignal("CurrentCamera"):Connect(function() Cam = WS.CurrentCamera end)
 
 RS.RenderStepped:Connect(function()
     local hum = L.Character and L.Character:FindFirstChildOfClass("Humanoid")
     if (Cfg.aim or Cfg.autoShoot) and hum and hum.Health > 0 then
-        local best, bd = nil, 300
+        local best, bd = nil, Cfg.fov
         for _, p in pairs(Players:GetPlayers()) do
             if p ~= L and p.Character then
                 local h = p.Character:FindFirstChild("Head")
@@ -296,6 +475,7 @@ RS.Heartbeat:Connect(function()
     
     if hum and hrp then
         if Cfg.spd then hum.WalkSpeed = 60 elseif hum.WalkSpeed ~= 16 and not Cfg.fly then hum.WalkSpeed = 16 end
+        if Cfg.jmp then hum.JumpPower = 100 end
         
         if Cfg.fly then
             local d = Vector3.new()
@@ -307,9 +487,13 @@ RS.Heartbeat:Connect(function()
             hrp.Velocity = d.Magnitude > 0 and d.Unit * 50 or Vector3.new()
         end
 
-        if Cfg.antiAim then
-            hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(180), 0)
+        if Cfg.nc then
+            for _, p in pairs(char:GetDescendants()) do
+                if p:IsA("BasePart") then p.CanCollide = false end
+            end
         end
+
+        if Cfg.antiAim then hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(180), 0) end
 
         if Cfg.dodge then
             for _, obj in pairs(WS:GetChildren()) do
@@ -317,15 +501,22 @@ RS.Heartbeat:Connect(function()
                     local vel = obj.Velocity or obj.AssemblyLinearVelocity
                     if vel.Magnitude > 50 then
                         local dist = (hrp.Position - obj.Position).Magnitude
-                        if dist < 20 then
-                            local dir = (hrp.Position - obj.Position).Unit
-                            hrp.Velocity = dir * 100 
-                        end
+                        if dist < 20 then hrp.Velocity = (hrp.Position - obj.Position).Unit * 100 end
                     end
                 end
             end
         end
+
+        if Cfg.gravity then WS.Gravity = 196 end
+        if Cfg.fullbright then
+            game:GetService("Lighting").Brightness = 3
+            game:GetService("Lighting").ClockTime = 14
+        end
     end
+end)
+
+UIS.JumpRequest:Connect(function()
+    if Cfg.jmp then local hum = L.Character and L.Character:FindFirstChildOfClass("Humanoid") if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end end
 end)
 
 task.spawn(function()
@@ -334,7 +525,7 @@ task.spawn(function()
             if p ~= L and p.Character then
                 if Cfg.hit then
                     for _, obj in pairs(p.Character:GetChildren()) do
-                        if obj:IsA("BasePart") then obj.Size = Vector3.new(25, 25, 25) obj.Transparency = 0.5 end
+                        if obj:IsA("BasePart") then obj.Size = Vector3.new(Cfg.hitSize, Cfg.hitSize, Cfg.hitSize) obj.Transparency = 0.5 end
                     end
                 end
                 local esp = p.Character:FindFirstChild("GunESP")
@@ -353,6 +544,7 @@ task.spawn(function()
     end
 end)
 
+-- ARRASTAR
 local drag, ds, dp
 TopBar.InputBegan:Connect(function(i)
     if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
@@ -360,9 +552,7 @@ TopBar.InputBegan:Connect(function(i)
     end
 end)
 TopBar.InputEnded:Connect(function(i)
-    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
-        drag = false
-    end
+    if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then drag = false end
 end)
 UIS.InputChanged:Connect(function(i)
     if drag and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then
