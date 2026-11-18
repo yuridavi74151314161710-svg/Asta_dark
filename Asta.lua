@@ -228,7 +228,6 @@ local function playIntroAndOpen()
         TweenService:Create(IntroTitle, fadeIn, {TextTransparency = 0}):Play()
         TweenService:Create(IntroQuote, fadeIn, {TextTransparency = 0}):Play()
         
-        -- AUMENTEI O TEMPO DA INTRO AQUI PARA 3 SEGUNDOS
         task.wait(3.0)
         
         local fadeOut = TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
@@ -254,7 +253,6 @@ CloseBtn.MouseButton1Click:Connect(function() MainMenu.Visible = false end)
 local Cam = WS.CurrentCamera
 WS:GetPropertyChangedSignal("CurrentCamera"):Connect(function() Cam = WS.CurrentCamera end)
 
--- Lógica do Aimbot 100% e Auto-Shoot
 RS.RenderStepped:Connect(function()
     local hum = L.Character and L.Character:FindFirstChildOfClass("Humanoid")
     if (Cfg.aim or Cfg.autoShoot) and hum and hum.Health > 0 then
@@ -291,7 +289,6 @@ RS.RenderStepped:Connect(function()
     end
 end)
 
--- Lógica de Anti-Aim, Desviar de Balas, Speed e Fly
 RS.Heartbeat:Connect(function()
     local char = L.Character
     local hum = char and char:FindFirstChildOfClass("Humanoid")
@@ -331,7 +328,6 @@ RS.Heartbeat:Connect(function()
     end
 end)
 
--- Lógica do Hitbox e ESP
 task.spawn(function()
     while task.wait(0.5) do
         for _, p in pairs(Players:GetPlayers()) do
@@ -357,7 +353,6 @@ task.spawn(function()
     end
 end)
 
--- Arrastar Menu
 local drag, ds, dp
 TopBar.InputBegan:Connect(function(i)
     if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
