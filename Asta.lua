@@ -251,7 +251,8 @@ local function MakeTab(name)
     end)
     
     return page
-endlocal pCombat = MakeTab("Combat")
+end
+local pCombat = MakeTab("Combat")
 local pVisual = MakeTab("Visual")
 local pMove = MakeTab("Movement")
 local pMisc = MakeTab("Misc")
