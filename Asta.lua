@@ -249,6 +249,7 @@ local function MakeTab(name)
             end
         end
     end)
+    
     return page
 endlocal pCombat = MakeTab("Combat")
 local pVisual = MakeTab("Visual")
